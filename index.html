@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102b25">
+  <title>Inventory Management Lite</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#" aria-label="Stockwise home">
+        <span class="brand-mark">▦</span>
+        <span><strong>Stockwise</strong><small>INVENTORY LITE</small></span>
+      </a>
+      <p class="nav-label">WORKSPACE</p>
+      <nav class="nav-list" aria-label="Main navigation">
+        <button class="nav-link active" data-page="dashboard">▦ <span>Dashboard</span></button>
+        <button class="nav-link" data-page="products">▤ <span>Products</span></button>
+        <button class="nav-link" data-page="categories">◫ <span>Categories</span></button>
+        <button class="nav-link" data-page="activity">↕ <span>Stock activity</span></button>
+      </nav>
+      <div class="sidebar-status">
+        <span class="nav-label">INVENTORY STATUS</span>
+        <p><span class="status-dot"></span><span id="sidebar-status">All systems ready</span></p>
+        <small>Lite edition · Local browser storage</small>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="mobile-header">
+        <a class="brand" href="#"><span class="brand-mark">▦</span><strong>Stockwise Lite</strong></a>
+        <button class="icon-button" id="mobile-menu" aria-label="Toggle navigation">☰</button>
+      </header>
+      <nav class="mobile-nav nav-list" id="mobile-nav" aria-label="Mobile navigation">
+        <button class="nav-link active" data-page="dashboard">▦ <span>Dashboard</span></button>
+        <button class="nav-link" data-page="products">▤ <span>Products</span></button>
+        <button class="nav-link" data-page="categories">◫ <span>Categories</span></button>
+        <button class="nav-link" data-page="activity">↕ <span>Activity</span></button>
+      </nav>
+
+      <div class="page-header">
+        <div>
+          <p class="eyebrow">WORKSPACE / <span id="breadcrumb">OVERVIEW</span></p>
+          <h1 id="page-title">Inventory overview</h1>
+          <p class="page-description" id="page-description">Here's what's happening with your stock today.</p>
+        </div>
+        <div class="header-actions">
+          <button class="button button-secondary" id="export-button">↓ Export CSV</button>
+          <button class="button button-primary" id="add-product-button">＋ Add product</button>
+        </div>
+      </div>
+
+      <section id="page-dashboard" class="page-section">
+        <div class="stats-grid">
+          <article class="stat-card"><div class="stat-top"><span>Total products</span><span class="stat-icon">▤</span></div><strong class="stat-value" id="metric-products">0</strong><p>Unique product types</p></article>
+          <article class="stat-card"><div class="stat-top"><span>Units in stock</span><span class="stat-icon blue">▦</span></div><strong class="stat-value" id="metric-units">0</strong><p>Across all products</p></article>
+          <article class="stat-card"><div class="stat-top"><span>Inventory value</span><span class="stat-icon amber">₱</span></div><strong class="stat-value money-value" id="metric-value">₱0</strong><p>Based on unit cost</p></article>
+          <article class="stat-card"><div class="stat-top"><span>Needs attention</span><span class="stat-icon red">!</span></div><strong class="stat-value" id="metric-alerts">0</strong><p>Low or out of stock</p></article>
+        </div>
+
+        <div class="dashboard-grid">
+          <section class="card distribution-card">
+            <div class="card-heading"><div><h2>Stock distribution</h2><p>Products grouped by stock status</p></div><span class="live-label">LIVE SUMMARY</span></div>
+            <div id="distribution-bars" class="distribution-bars"></div>
+          </section>
+          <section class="card quick-actions">
+            <div class="card-heading"><div><h2>Quick actions</h2><p>Manage your inventory</p></div></div>
+            <button class="quick-action" id="quick-add"><span class="quick-symbol">＋</span><span><strong>Add new product</strong><small>Register a product in your catalog</small></span></button>
+            <button class="quick-action" id="quick-stock"><span class="quick-symbol">↕</span><span><strong>Update stock</strong><small>Record incoming or outgoing stock</small></span></button>
+            <button class="quick-action" id="quick-low"><span class="quick-symbol warning">⚠</span><span><strong>Review low stock</strong><small>Find products to replenish</small></span></button>
+          </section>
+        </div>
+
+        <section class="card table-card">
+          <div class="card-heading table-heading"><div><h2>Recent inventory</h2><p>Your current product catalog</p></div><button class="button button-secondary" id="view-all">View all →</button></div>
+          <div id="recent-table"></div>
+        </section>
+      </section>
+
+      <section id="page-products" class="page-section card" hidden>
+        <div class="toolbar">
+          <div class="toolbar-fields">
+            <input class="field search-field" id="product-search" type="search" placeholder="⌕  Search products or SKU..." aria-label="Search products">
+            <select class="field filter-field" id="status-filter" aria-label="Filter by stock status">
+              <option value="all">All stock statuses</option><option value="In stock">In stock</option><option value="Low stock">Low stock</option><option value="Out of stock">Out of stock</option>
+            </select>
+          </div>
+          <span id="product-count" class="muted"></span>
+        </div>
+        <div id="products-table"></div>
+      </section>
+
+      <section id="page-categories" class="page-section card" hidden>
+        <div class="section-intro"><h2>Product categories</h2><p>Browse your inventory by category.</p></div>
+        <div id="category-list" class="category-grid"></div>
+      </section>
+
+      <section id="page-activity" class="page-section card" hidden>
+        <div class="section-intro"><h2>Stock movement history</h2><p>Recorded inventory adjustments in this browser.</p></div>
+        <div id="activity-table"></div>
+      </section>
+
+      <footer class="footer"><span>Stockwise Lite · Inventory made simple</span><span id="footer-products">0 products</span></footer>
+    </main>
+  </div>
+
+  <div id="modal-root"></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
